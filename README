@@ -1,0 +1,5 @@
+#HUDSON WEBSPHERE DEPLOY PLUGIN
+##Deploy to remove websphere server from hudson,support deploy to common server/nd cluster.
+##Config: 
+first :config url , eg:http://192.168.1.2:8887
+second:config target, use server name or cluster name
