@@ -11,7 +11,6 @@ import hudson.plugins.deploy.ContainerAdapterDescriptor;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.jvnet.localizer.ResourceBundleHolder;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -21,17 +20,16 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class WAS61Adapter extends ContainerAdapter {
 	protected PrintStream log;
-	private final String url;
+	public final String url;
 	private static final int HTTP_PREFIX = 7;
 	private String hostName;
 	private String connectPort;
-	private final String targetName;
+	public final String targetName;
 
 	@DataBoundConstructor
 	public WAS61Adapter(String url, String targetName) {
 		this.url = url;
 		this.targetName = targetName;
-		parseHostnameAndPort();
 	}
 
 	public String getContainerId() {
@@ -40,7 +38,6 @@ public class WAS61Adapter extends ContainerAdapter {
 
 	@Extension
 	public static final class DescriptorImpl extends ContainerAdapterDescriptor {
-		@Override
 		public String getDisplayName() {
 			return "WebSphere AS/ND 6.1";
 		}
@@ -52,12 +49,14 @@ public class WAS61Adapter extends ContainerAdapter {
 		try {
 			this.log = listener.getLogger();
 			log.println("[WARNING]Deploying " + war.getName() + " to WebSphere AS/ND 6.1 ");
+			parseHostnameAndPort();
 			Deployer d = new Deployer(hostName, connectPort, targetName);
 			d.setLogger(this.log);
 			log.println("deploy file :" + war.absolutize().toString());
 			d.deploy(war.absolutize().toString());
 		} catch (Exception e) {
-			listener.fatalError(ResourceBundleHolder.get(WAS61Adapter.class).format("DeployExecutionFailed", e));
+			listener.fatalError("WAS 6.1 deploy execution failed:" + e.getMessage());
+			e.printStackTrace(this.log);
 			return false;
 		}
 		return true;
@@ -68,4 +67,5 @@ public class WAS61Adapter extends ContainerAdapter {
 		this.hostName = urlTemp.split(":")[0];
 		this.connectPort = urlTemp.split(":")[1];
 	}
+
 }
