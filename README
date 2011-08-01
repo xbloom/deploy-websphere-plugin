@@ -1,5 +1,5 @@
 #HUDSON WEBSPHERE DEPLOY PLUGIN
-##Deploy to remove websphere server from hudson,support deploy to common server/nd cluster.
+##Deploy to remote websphere server from hudson,support deploy to common server/nd cluster.
 ##Config: 
 first:copy was lib file into hudson plugin folder,common in .hudson/plugins\deploy-websphere\WEB-INF\lib
 com.ibm.ws.admin.client_6.1.0-1.0.jar  
